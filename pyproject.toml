@@ -1,0 +1,50 @@
+[project]
+name = "cumcubes"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = "==3.10.*"
+dependencies = [
+    "numpy<2",
+    "torch>=2.6.0",
+]
+
+[project.optional-dependencies]
+nvidia = [
+    "torch>=2.6.0",
+]
+amd = [
+    "torch==2.7.0.dev20250212+rocm6.3",
+    "pytorch-triton-rocm",
+]
+
+[tool.uv]
+conflicts = [
+    [
+      { extra = "nvidia" },
+      { extra = "amd" },
+    ],
+]
+
+[tool.uv.sources]
+torch = [
+  { index = "torch-amd", extra = "amd" },
+  { index = "torch-nvidia", extra = "nvidia" },
+]
+pytorch-triton-rocm = [
+    { index = "torch-amd", extra = "amd" },
+]
+
+[[tool.uv.index]]
+name = "torch-nvidia"
+url = "https://download.pytorch.org/whl/cu124"
+explicit = true
+
+[[tool.uv.index]]
+name = "torch-amd"
+url = "https://download.pytorch.org/whl/nightly/rocm6.3"
+explicit = true
+
+[build-system]
+requires = ["setuptools", "ninja", "wheel", "torch>=2.4.1", "numpy<2"]
+build-backend = "setuptools.build_meta"
